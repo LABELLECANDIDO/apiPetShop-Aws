@@ -8,8 +8,11 @@ const clienteRoutes = require("./routes/clientes");
 
 const PORT = 3001;
 
-app.use(cors());
+// Habilitar CORS
+app.use(cors({ origin: 'http://127.0.0.1:5500' }));
 app.use(express.json());
+
+// Configurar cabeçalhos CORS manualmente
 
 // Rotas
 app.use('/pets', petRoutes);
@@ -24,9 +27,9 @@ app.use((err, req, res, next) => {
     }
 });
 
-    app.listen(PORT, () => {
-        console.log(`Servidor rodando na porta ${PORT}`);
-    });
+app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+});
 
 mongoose.connection.on('error', (err) => {
     console.error('Erro na conexão com o MongoDB:', err);
