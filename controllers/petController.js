@@ -1,5 +1,6 @@
 const Pet = require('../models/Pet');
 const Cliente = require('../models/Cliente');
+const logger = require('../logger'); // Importando o logger
 
 class PetController {
     // Criar um novo pet
@@ -13,6 +14,7 @@ class PetController {
 
             return res.status(201).json(pet);
         } catch (error) {
+            logger.error(`Erro ao criar pet: ${error.message}`); // Logando o erro
             return res.status(400).json({ error: error.message });
         }
     }
@@ -27,11 +29,12 @@ class PetController {
             const pets = await Pet.find(filter).populate('dono', 'nome');
             return res.status(200).json(pets);
         } catch (error) {
+            logger.error(`Erro ao buscar pets: ${error.message}`); // Logando o erro
             return res.status(500).json({ error: error.message });
         }
     }
 
-    // pega pet pelo ID
+    // Pegar pet pelo ID
     async getPetById(req, res) {
         try {
             const pet = await Pet.findById(req.params.id).populate('dono', 'nome');
@@ -40,6 +43,7 @@ class PetController {
             }
             return res.status(200).json(pet);
         } catch (error) {
+            logger.error(`Erro ao buscar pet com ID ${req.params.id}: ${error.message}`); // Logando o erro
             return res.status(500).json({ error: error.message });
         }
     }
@@ -53,6 +57,7 @@ class PetController {
             }
             return res.status(200).json(pet);
         } catch (error) {
+            logger.error(`Erro ao atualizar pet com ID ${req.params.id}: ${error.message}`); // Logando o erro
             return res.status(400).json({ error: error.message });
         }
     }
@@ -70,6 +75,7 @@ class PetController {
 
             return res.status(200).json({ message: 'Pet deletado com sucesso' });
         } catch (error) {
+            logger.error(`Erro ao excluir pet com ID ${req.params.id}: ${error.message}`); // Logando o erro
             return res.status(500).json({ error: error.message });
         }
     }

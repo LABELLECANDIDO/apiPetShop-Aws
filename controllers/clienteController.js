@@ -1,5 +1,6 @@
 const Cliente = require('../models/Cliente');
 const Pet = require('../models/Pet');
+const logger = require('../logger'); // Importe o logger
 
 class ClienteController {
     // criar um novo cliente
@@ -9,20 +10,22 @@ class ClienteController {
             await cliente.save();
             return res.status(201).json(cliente);
         } catch (error) {
+            logger.error(`Erro ao criar cliente: ${error.message}`); // Registra o erro no log
             return res.status(400).json({ error: error.message });
         }
     }
 
+    // obter todos os clientes
     async getAll(req, res) {
         try {
-            //filtro
             let query = {}; 
             if (req.query.nome) {
-                query.nome = { $regex: new RegExp(req.query.nome, ) }; 
+                query.nome = { $regex: new RegExp(req.query.nome) }; 
             }
             const clientes = await Cliente.find(query).populate('pets');
             return res.status(200).json(clientes);
         } catch (error) {
+            logger.error(`Erro ao buscar todos os clientes: ${error.message}`); // Registra o erro no log
             return res.status(500).json({ error: error.message });
         }
     }
@@ -36,6 +39,7 @@ class ClienteController {
             }
             return res.status(200).json(cliente);
         } catch (error) {
+            logger.error(`Erro ao buscar cliente por ID: ${error.message}`); // Registra o erro no log
             return res.status(500).json({ error: error.message });
         }
     }
@@ -49,6 +53,7 @@ class ClienteController {
             }
             return res.status(200).json(cliente);
         } catch (error) {
+            logger.error(`Erro ao atualizar cliente: ${error.message}`); // Registra o erro no log
             return res.status(400).json({ error: error.message });
         }
     }
@@ -58,17 +63,17 @@ class ClienteController {
         try {
             const cliente = await Cliente.findByIdAndDelete(req.params.id);
             if (!cliente) {
-                return res.status(404).json({ error: 'cliente não encontrado' });
+                return res.status(404).json({ error: 'Cliente não encontrado' });
             }
-
-            // Deleta todos os pets associados ao cliente
             await Pet.deleteMany({ dono: cliente._id });
-
             return res.status(200).json({ message: 'Cliente e seus pets deletados com sucesso' });
         } catch (error) {
+            logger.error(`Erro ao deletar cliente: ${error.message}`); // Registra o erro no log
             return res.status(500).json({ error: error.message });
         }
     }
+
+    // deletar cliente pelo nome
     async filtroDeletar(req, res) {
         try {
             const nome = req.params.nome;
@@ -76,14 +81,13 @@ class ClienteController {
             if (!cliente) {
                 return res.status(404).json({ error: 'Cliente não encontrado' });
             }
-    
-            // Deleta todos os pets associados ao cliente
             await Pet.deleteMany({ dono: cliente._id });
-    
             return res.status(200).json({ message: 'Cliente e seus pets deletados com sucesso' });
         } catch (error) {
+            logger.error(`Erro ao deletar cliente pelo nome: ${error.message}`); // Registra o erro no log
             return res.status(500).json({ error: error.message });
         }
     }
 }
+
 module.exports = new ClienteController();
