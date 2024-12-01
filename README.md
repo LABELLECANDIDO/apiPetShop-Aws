@@ -73,14 +73,14 @@ No Grafana aparecerá métricas como:
 - Número de usuários virtuais (vus)
 - Número de interações realizadas (iterations)
 # Exemplo de painel de monitoramento no grafana:
-![painel de monitoramento do grafana](img\teste.png)
+![painel de monitoramento do grafana](teste.png)
 
 ## Testes de Carga
 1. Crie um arquivo de teste para o K6 (exemplo: loadtest.js):
 2. Execute o teste:
 > ```k6 run loadtest.js```
 # Exemplo de painel do resultado:
-![execução completa do k6](img\k6.png)
+![execução completa do k6](k6.png)
 
 
 
